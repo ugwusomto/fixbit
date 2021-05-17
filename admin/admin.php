@@ -4,7 +4,7 @@
  require_once "../functions/Admin.php";
  $instance = Database::getDbInstance();
  Admin::setDb($instance);
-
+ $Admins = Admin::getAllAdmins();
 //  process the form registertion
  if(!empty($_POST["registerAdmin"])){
   $result = Admin::registerAdmin($_POST);
@@ -86,26 +86,10 @@
 
                     <main>
                         <div class="container-fluid">
-                            <h1 class="mt-4">View Customers</h1>
-                            <ol class="breadcrumb mb-4">
-                                <li class="breadcrumb-item active">Dashboard</li>
-                            </ol>
+
 
                             <!-- SEARCH -->
-                            <section id="search" class="py-4">
-                                <div class="container">
-                                    <div class="row">
-                                        <div class="col-md-6 ml-auto">
-                                            <div class="input-group">
-                                                <input type="text" class="form-control" placeholder="Search Users...">
-                                                <div class="input-group-append">
-                                                    <button class="btn background-light">Search</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </section>
+
 
                             <!-- USERS -->
                             <section id="users">
@@ -114,7 +98,7 @@
                                         <div class="col">
                                             <div class="card">
                                                 <div class="card-header text-center">
-                                                    <h4>Current Users</h4>
+                                                    <h4>Current Admins</h4>
                                                 </div>
                                                 <table class="table table-striped">
                                                     <thead class="background-dark">
@@ -124,35 +108,37 @@
                                                             <th>Email</th>
                                                             <th>CreatedAt</th>
                                                             <th>UpdatedAt</th>
-                                                            <th>Edit admin</th>
-                                                            <th>Delete admin</th>
+                                                            <th>Action</th>
+                                                         
                                                         </tr>
                                                     </thead>
                                                     <tbody id="userTable">
-                                                        <tr>
-                                                            <td>1</td>
-                                                            <td>John Doe</td>
-                                                            <td>john.doe@example.com</td>
-                                                            <td>2021-05-05 15:39:21</td>
-                                                            <td>2021-05-05 15:39:21</td>
-                                                            <td>
-                                                                <div>
-                                                                    <a href="edit-admin.php" type="button"
-                                                                        class="btn btn-primary">
-                                                                        <i class="fas fa-trash"></i> Edit admin
-                                                                    </a>
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <div>
 
-                                                                    <a href="index.html"
-                                                                        class="btn btn-danger btn-block">
-                                                                        <i class="fas fa-trash"></i> Delete admin
+                                                       <?php foreach ($Admins as $key => $value) {   ?>
+
+                                                        <tr>
+                                                            <td><?=$key?></td>
+                                                            <td><?=$value->username?></td>
+                                                            <td><?=$value->email?></td>
+                                                            <td><?=date("d M,Y",strtotime($value->created_at))?></td>
+                                                            <td><?=date("d M,Y",strtotime($value->updated_at))?></td>
+                                                            <td>
+                                                                <div>
+                                                                    <a title="edit record" href="edit-admin.php?id=<?=$value->id?>" type="button"
+                                                                        class="">
+                                                                        <i class="fas fa-edit"></i> 
+                                                                    </a>
+                                                                    <a title="delete record" href="index.html"
+                                                                        class="text-danger">
+                                                                        <i class="fas fa-trash"></i> 
                                                                     </a>
                                                                 </div>
                                                             </td>
+
                                                         </tr>
+
+                                                        <?php   } ?>
+
 
                                                     </tbody>
                                                 </table>
