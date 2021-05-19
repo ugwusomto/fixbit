@@ -116,7 +116,7 @@
 
                                                        <?php foreach ($Admins as $key => $value) {   ?>
 
-                                                        <tr>
+                                                        <tr id="row<?=$value->id?>">
                                                             <td><?=$key?></td>
                                                             <td><?=$value->username?></td>
                                                             <td><?=$value->email?></td>
@@ -128,8 +128,8 @@
                                                                         class="">
                                                                         <i class="fas fa-edit"></i> 
                                                                     </a>
-                                                                    <a title="delete record" href="index.html"
-                                                                        class="text-danger">
+                                                                    <a data-role="<?=$value->role?>" data-name="Admin"  data-id="<?=$value->id?>" title="delete record" href="<?=APP_PATH?>functions/api-request.php"
+                                                                        class="text-danger delete_data">
                                                                         <i class="fas fa-trash"></i> 
                                                                     </a>
                                                                 </div>

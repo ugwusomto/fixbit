@@ -6,6 +6,8 @@ class Admin
     private static $Db = null;
     private static $tableName = "users";
     private static $role = 1;
+    private static $super_role = 2;
+
 
     /**
      * @Desc This function processes admin register
@@ -107,7 +109,7 @@ class Admin
      * @desc This function selects all the admins
      */
     public static function getAllAdmins(){
-      $sql = "SELECT * FROM ".self::$tableName." WHERE `role`=".self::$role;
+      $sql = "SELECT * FROM ".self::$tableName." WHERE `role` IN(".self::$role.",".self::$super_role.")";
       $result = self::$Db->query($sql);
       if($result->num_rows > 0){
         $rows = [];
@@ -194,5 +196,34 @@ class Admin
         return $messageBox;
       }
     }
+
+
+    /**
+     * @Desc This function deletes an admin by the ID
+     * @param id integer
+     */
+    public static function deleteAdminById($id,$role) : bool
+    {
+      if($role == self::$super_role){
+        $message = ["message"=>"You can not delete this super Admin ","status"=>"error"];
+        echo json_encode($message);
+         return false;
+       }
+       $sql = "DELETE FROM ".self::$tableName." WHERE `id`='$id'";
+       $result = self::$Db->query($sql);
+       if($result){
+         $message = ["message"=>"Admin successfully deleted","status"=>"success"];
+         echo json_encode($message);
+         return true;
+       }else{
+        $message = ["message"=>"Admin failed to delete ","status"=>"error"];
+        echo json_encode($message);
+         return false;  
+       }
+    }
+
+
+
+
 
 }
