@@ -1,5 +1,13 @@
 <?php
  require_once "../config/config.php";
+
+ if(empty($_SESSION['admin_id'])){
+	$path = APP_PATH.'admin/login.php';
+	header("Location: $path");
+	exit();
+}
+
+
  require_once "../config/Db.php";
  require_once "../functions/Admin.php";
  $instance = Database::getDbInstance();

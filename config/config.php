@@ -1,4 +1,5 @@
 <?php 
+session_start();
  define("APP_NAME","FixBit");
  define("APP_PATH","http://localhost/fixbit/");
  define("CSS_PATH","http://localhost/fixbit/assets/css/");

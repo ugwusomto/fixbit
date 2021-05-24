@@ -49,11 +49,16 @@
                                 <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                                 Comments
                             </a>
+
+                            <a class="nav-link" href="logout.php">
+                                <div class="sb-nav-link-icon"><i class="fas fa-arrow-right"></i></div>
+                                Logout
+                            </a>
                           
                         </div>
                     </div>
                     <div class="sb-sidenav-footer">
                         <div class="small">Logged in as:</div>
-                        Start Bootstrap
+                        <?=$_SESSION['admin_username']?>
                     </div>
                 </nav>

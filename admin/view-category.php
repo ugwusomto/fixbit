@@ -1,7 +1,21 @@
-<?php require_once "../config/config.php"; ?>
+<?php
+ require_once "../config/config.php";
+ if(empty($_SESSION['admin_id'])){
+	$path = APP_PATH.'admin/login.php';
+	header("Location: $path");
+	exit();
+}
+
+ require_once "../config/Db.php";
+ require_once "../functions/Category.php";
+ $instance = Database::getDbInstance();
+ Category::setDb($instance);
+ $Cat = Category::getAllCategory();
+// var_dump($Cat);
+// die();
+ ?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 	<?php require_once "includes/admin-css.php"; ?>
 </head>
@@ -20,27 +34,6 @@
 					<ol class="breadcrumb mb-4">
 						<li class="breadcrumb-item active">Dashboard</li>
 					</ol>
-					<section id="search" class="py-4">
-						<div class="container">
-							<div class="row">
-								<div class="col-md-6 ml-auto">
-									<div class="input-group">
-
-										<a href="add-category.php">
-											<button type="button" class="btn btn-primary">
-												Add New Category
-											</button>
-										</a>
-
-										<input type="text" class="form-control" placeholder="Search Users..." style="margin-left: 10px;">
-										<div class="input-group-append">
-											<button class="btn background-light">Search</button>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</section>
 
 					<!-- USERS -->
 					<section id="users">
@@ -55,72 +48,34 @@
 											<thead class="background-dark">
 												<tr>
 													<th>id</th>
-													<th>Category_name</th>
-													<th>Updated At</th>
-													<th>Edit Category</th>
-													<th>Delete Category</th>
+													<th>Category Name</th>
+													<th>UpdatedAt</th>
+													<th>Action</th>
+
 												</tr>
 											</thead>
 											<tbody id="userTable">
-												<tr>
-													<td>1</td>
-													<td>Politics</td>
-													<td> 15:39:21</td>
-													<td>
-														<div>
-															<a href="edit-category.php" type="button" class="btn btn-primary btn-block">
-																Edit Category
-															</a>
-														</div>
-													</td>
-													<td>
-														<div>
-															<a href="#" class="btn btn-danger btn-block">
-																Delete
-															</a>
-														</div>
-													</td>
-												</tr>
-												<tr>
-													<td>1</td>
-													<td>Politics</td>
-													<td> 15:39:21</td>
-													<td>
-														<div>
-														<a href="edit-category.php" type="button" class="btn btn-primary btn-block">
-																Edit Category
-															</a>
-														</div>
-													</td>
-													<td>
-														<div>
-															<a href="#" class="btn btn-danger btn-block">
-																Delete
-															</a>
-														</div>
-													</td>
-												</tr>
-												<tr>
-													<td>1</td>
-													<td>Politics</td>
-													<td> 15:39:21</td>
-													<td>
-														<div>
-														<a href="edit-category.php" type="button" class="btn btn-primary btn-block">
-																Edit Category
-															</a>
-														</div>
-													</td>
-													<td>
-														<div>
-															<a href="#" class="btn btn-danger btn-block">
-																Delete
-															</a>
-														</div>
-													</td>
-												</tr>
 
+												<?php foreach ($Cat as $key => $value) {   ?>
 
+													<tr id="row<?= $value->id ?>">
+														<td><?= $key ?></td>
+														<td><?= $value->name ?></td>
+														<td><?= date("d M,Y", strtotime($value->created_at)) ?></td>
+														<td>
+															<div>
+																<a title="edit record" href="edit-category.php?id=<?= $value->id ?>" type="button" class="">
+																	<i class="fas fa-edit">Edit</i>
+																</a>
+																<a data-name="Category" data-id="<?= $value->id ?>" title="delete record" href="<?= APP_PATH ?>functions/api-request.php" class="text-danger delete_category">
+																	<i class="fas fa-trash">Delete</i>
+																</a>
+															</div>
+														</td>
+
+													</tr>
+
+												<?php   } ?>
 
 
 											</tbody>

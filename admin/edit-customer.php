@@ -1,4 +1,12 @@
-<?php require_once "../config/config.php"; ?>
+<?php require_once "../config/config.php";
+if(empty($_SESSION['admin_id'])){
+	$path = APP_PATH.'admin/login.php';
+	header("Location: $path");
+	exit();
+}
+
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 	<head>

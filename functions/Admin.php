@@ -68,6 +68,61 @@ class Admin
         }
     }
 
+    public static function loginAdmin($post = [])
+    {
+
+        $messageBox = [];
+        $formData = [];
+        extract($post);
+
+        //  check for email
+        if (!empty($email)) {
+          $formData[ "email"] = $email;
+        } else {
+            $messageBox["email"] = "Please enter email";
+        }
+
+        //  check for password
+        if (!empty($password)) {
+            $formData["password"] = sha1($password);
+        } else {
+            $messageBox["password"] = "Please enter password";
+        }
+
+        if(empty($messageBox)){
+           extract($formData);
+           $sql = "SELECT * FROM ".self::$tableName." WHERE `email`='$email' AND `password`='$password' AND 'role'!='0'";
+           $result =  self::$Db->query($sql);
+           if($result->num_rows > 0){
+             $result = $result->fetch_assoc();
+             self::setAdminSession($result);
+             $messageBox["status"] = "success";
+             $messageBox["message"] = "Login Successfull";
+             return $messageBox;
+           }else{
+            $messageBox["status"] = "error";
+            $messageBox["message"] = "Invalid Login Details";
+            return $messageBox;
+           }
+        }else{
+          $messageBox["status"] = "error";
+          return $messageBox;
+        }
+    }
+
+
+    /**
+     * @Desc This functions sets the admin session
+     * @param Array  $admin
+     */
+    public static function setAdminSession($admin){
+       extract($admin);
+       $_SESSION['admin_id'] = $id;
+       $_SESSION['admin_username'] = $username;
+       $_SESSION['admin_email'] = $email;
+    }
+
+
     public static function setDb($dbInstance)
     {
         self::$Db = $dbInstance;
