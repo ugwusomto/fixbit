@@ -12,10 +12,16 @@ class Utils
   public static function uploadFile($file): array
   {
     extract($file);
-    // self::see($file);
-    $result = move_uploaded_file($tmp_name,__DIR__."/../assets/images/posts/$name");
-    self::see($result);
-    return [];
+    
+    $nameArray = explode('.',$name);
+    $imageExternsion = end($nameArray);
+    $newImageName = uniqid().rand(0,10000).'.'.$imageExternsion;
+    $imageUrl = IMAGE_PATH."posts/$newImageName";
+    $result = move_uploaded_file($tmp_name,__DIR__."/../assets/images/posts/$newImageName");
+    if($result){
+      return ['status'=>'success','url'=>$imageUrl];
+    }
+    return ['status'=>'error'];
   }
 
 

@@ -42,13 +42,16 @@ class Category{
         return array();
     }
   }
+
+
   public static function getCategoryById($id)
   {
     $sql = "SELECT * FROM ".self::$tableName." WHERE `id`='$id'";
+  
     $result = self::$Db->query($sql);
     if($result->num_rows > 0){
-      $catigory = $result->fetch_assoc();
-      return  $catigory;
+      $category = $result->fetch_assoc();
+      return  $category;
     }else{
       return [];
     }

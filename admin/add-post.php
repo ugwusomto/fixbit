@@ -25,11 +25,25 @@ $allCategory = Category::getAllCategory();
 
 //  process the post upload
 if(!empty($_POST["uploadPost"])){
-  echo "<pre>";
-  print_r($_POST);
-  $result = Utils::uploadFile($_FILES['image']);
-  die();
- $result = Post::AddPost($_POST);
+  // echo "<pre>";
+
+  $imageData = (object) Utils::uploadFile($_FILES['image']);
+  if($imageData->status == "success"){
+    $_POST['image']= $imageData->url;
+    $_POST['content'] = htmlentities($_POST['content'],ENT_QUOTES);
+    $_POST['title'] = htmlentities($_POST['title'],ENT_QUOTES);
+
+    $result = Post::AddPost($_POST);
+    if($result){
+      $success = true;
+    }else{
+      $error = false;
+    }
+  }else{
+    die();
+  }
+
+
 }
 
 
@@ -70,16 +84,25 @@ if(!empty($_POST["uploadPost"])){
           <section id="details">
             <div class="container">
               <div class="row">
-                <div class="col">
-                  <div class="card">
+                <div class="col ">
+                  <div class="card mt-5">
                     <div class="card-header">
-                      <h4>Add Post</h4>
+                 
                     </div>
                     <div class="card-body">
+                      <?php if(!empty($success)){ ?>
+                        <p class="text-center text-success">Post Successfully Uploaded</p>
+                      <?php }else if(!empty($error)){ ?>
+                      <p class="text-center text-danger">Post Failed to Upload</p>
+
+                      <?php } ?>
+
+
+
                       <form method="post" action="<?=$_SERVER['PHP_SELF']?>" enctype="multipart/form-data">
                         <div class="form-group">
                           <label for="title">Title</label>
-                          <input required name="title" type="text" class="form-control" value="Post One">
+                          <input required name="title" type="text" class="form-control" value="">
                         </div>
                         <div class="form-group">
                           <label for="category">Category</label>
@@ -127,7 +150,12 @@ if(!empty($_POST["uploadPost"])){
 
     </div>
   </div>
+  <script src="https://cdn.ckeditor.com/4.16.1/standard/ckeditor.js"></script>
+  <script>
+      CKEDITOR.replace( 'content' );
+  </script>
   <?php require_once "includes/scripts.php"; ?>
+
 
 
 </body>

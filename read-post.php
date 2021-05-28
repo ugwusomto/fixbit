@@ -1,5 +1,23 @@
 <?php  
- require_once "config/config.php";
+  require_once "config/config.php";
+	require_once "config/Db.php";
+ require_once "functions/Post.php";
+ require_once "functions/Category.php";
+ require_once "functions/Utils.php";
+ 
+ if(empty($_GET['post_id']) || !is_numeric($_GET['post_id'])){
+	 header('Location: 404.php');
+	 exit();
+ }
+ 
+ $post_id = $_GET['post_id'];
+ 
+ $instance = Database::getDbInstance();
+ Post::setDb($instance);
+ Category::setDb($instance);
+
+ $post = (object) Post::getPostById($post_id);
+//  $category = (object) Category::getCategoryById($cat_id);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -29,57 +47,18 @@
 								<div class="dlab-post-meta">
 									<ul>
 										<li class="post-author"><span>by</span> <a href="author.html">Shailja Reddy</a></li>
-										<li class="post-category">in <a href="javascript:void(0);">beauty</a>, <a href="javascript:void(0);">fashion</a></li>
-										<li class="post-date">at <span>12 August 2020</span></li>
+										<li class="post-category">in <a href="javascript:void(0);"><?=Category::getCategoryById($post->category_id)['name']?></a></li>
+										<li class="post-date">at <span><?=date('d M,Y',strtotime($post->created_at))?></span></li>
 									</ul>
 								</div>
-								<h2 class="title">Lori Loughlin and May Finally Break Their Silence in Court Tomorrow</h2>
+								<h2 class="title"><?=ucwords($post->title)?></h2>
 								<div class="dlab-post-media">
-									<a href="javascript:;"><img src="<?=IMAGE_PATH?>blog/blog-lg/pic3.jpg" alt=""></a>
+									<a href="javascript:;"><img src="<?=$post->image?>" alt=""></a>
 								</div>
 								<div class="dlab-post-text text">
-									<p>Lorem ipsum dolor sit amet, conse ctetur adipiscing elit. Sed maximus orci ac condi mentum efficitur. Suspendi potenti. Fusce diam felis, ullamcor aca felis sed, volutpat varius tortor. Ut eleifend justo sed quam blandit, vehicula ante hendrerit. Sed condimentum libero vel eros porta, eu malesuada nulla bibendum. Proin varius sollicitudin nulla quis fermentum. Nunc vitae arcu eget diam gravida ultrices finibus nec mi. Maecenas egestas libero.</p>
-									<p>Donec ultricies convallis urna. Morbi consequat vestibulum nunc sed semper. Proin iaculis risus eleifend, efficitur eros et, tristique tortor. Integer nec lacinia augue. Curabitur mattis vel orci id mattis. Aliquam eu dignissim sem. Interdum et malesuada fames ac ante ipsum primis in faucibus. Mauris vitae fermentum quam.</p>
-									<ul>
-										<li><a href="javascript:void(0);">Duis auctor sed elit quis consequat.</a> Fusce est quam, sodales vel eros vitae, dictum consectetur dolor. Fusce convallis mauris tellus, eu aliquet magna aliquet eget.</li>
-										<li>Nam iaculis, <a href="javascript:void(0);">enim ut elementum maximus, quam lectus convallis metus, </a>id suscipit risus lectus id urna. Cras viverra consectetur diam. Morbi sed consequat tellus, in vehicula urna.</li>
-										<li><a href="javascript:void(0);">Morbi sit amet diam sodales, sodales purus quis, </a>feugiat turpis. Maecenas elementum mauris quis plac erat maximus. <a href="javascript:void(0);">Curabitur elementum lobortis malesuada.</a></li>
-									</ul>
-									<p>Aliquam laoreet fringilla velit, quis pulvinar ex bibendum vestibulum. Aenean vel dapibus ex. Curabitur sodales dui ut hendrerit volutpat. Phasellus fringilla semper urna, eu dapibus lacus porttitor at. Sed eget pellentes orci. Aliquam pulvinar augue sed molestie semper. Integer ullamcorper magna fringilla arcu rutrum, sed porttitor ex viverra. </p>
-									<ul class="wp-block-gallery columns-3">
-										<li class="blocks-gallery-item"><img alt="" src="images/gallery/pic2.jpg"></li>
-										<li class="blocks-gallery-item"><img alt="" src="images/gallery/pic1.jpg"></li>
-									</ul>
-									<h4>Curabitur elementum lobortis malesuada.</h4>
-									<p>Aliquam laoreet fringilla velit, quis pulvinar ex bibendum vestibulum. Aenean vel dapibus ex. Curabitur sodales dui ut hendrerit volutpat. Phasellus fringilla semper urna, eu dapibus lacus porttitor at. Sed eget pellentes orci. Aliquam pulvinar augue sed molestie semper. Integer ullamcorper magna fringilla arcu rutrum, sed porttitor ex viverra. </p>
-									<blockquote class="wp-block-quote">
-										<p>Use this static Page to test the Theme’s handling of the Blog Posts Index page. If the site is set to display a static Page on the Front Page, and this Page is.</p>
-										<cite>WordPress Community</cite>
-									</blockquote>
-									<p>Cras ac erat sapien. Etiam porta, arcu sed scelerisque dapibus, orci felis tincidunt tellus, at bibendum ex velit ac dolor. Aenean auctor, lectus laoreet efficitur dapibus, orci nulla ultrices risus, sed volutpat nisl nulla at felis. Integer ligula risus, ultricies eu velit non, rutrum consectetur neque. Sed ullamcorper sed massa quis hendrerit. </p>
-									<p>Nulla ultrices diam at odio malesuada lacinia. Fusce eget posuere purus. Donec accumsan vehicula mi, id imperdiet nulla ornare eu. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. </p>
-									<p>Praesent vehicula neque et augue consectetur placerat. Ut pellentesque euismod sapien eget venenatis. Proin massa lacus, dapibus a scelerisque a, molestie sit amet mauris. Cras maximus lectus quis orci feugiat, at tristique velit bibendum. Etiam augue arcu, cursus id egestas ut, viverra at urna. Quisque ipsum sit amet aliquet tempus. </p>
-									
+								  <?=html_entity_decode($post->content,ENT_QUOTES)?>
 								</div>
-								<div class="post-footer">
-									<div class="dlab-post-meta">
-										<span class="title">TAGS : </span>
-										<ul class="tag-list">
-											<li class="post-tag"><a href="tags.html">#Lifestyle</a></li>
-											<li class="post-tag"><a href="tags.html">#Blog</a></li>
-											<li class="post-tag"><a href="tags.html">#Instagram</a></li>
-											<li class="post-tag"><a href="tags.html">#Image</a></li>
-										</ul>
-									</div>
-									<div class="share-post">
-										<ul class="list-inline m-b0">
-											<li><a href="javascript:void(0);" class="btn sharp radius-xl facebook"><i class="fa fa-facebook"></i></a></li>
-											<li><a href="javascript:void(0);" class="btn sharp radius-xl instagram"><i class="fa fa-instagram"></i></a></li>
-											<li><a href="javascript:void(0);" class="btn sharp radius-xl twitter"><i class="fa fa-twitter"></i></a></li>
-											<li><a href="javascript:void(0);" class="btn sharp radius-xl linkedin"><i class="fa fa-linkedin"></i></a></li>
-										</ul>
-									</div>
-								</div>
+
 							</div>
 						</div>
 						<div class="author-profile-info widget">
