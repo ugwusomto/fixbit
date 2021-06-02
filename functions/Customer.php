@@ -110,6 +110,17 @@
       }
 
 
+          /**
+     * @Desc This functions sets the customer session
+     * @param Array  $customer
+     */
+    public static function setCustomerSession($customer){
+      extract($customer);
+      $_SESSION['customer_id'] = $id;
+      $_SESSION['customer_username'] = $username;
+      $_SESSION['customer_email'] = $email;
+   }
+
 
       private static function custormerPassword($password){
         $sql = "SELECT `password` FROM ".self::$tableName." WHERE `Password`='$password'";
@@ -129,26 +140,11 @@
         extract($post);
 
 
-          //  check for username
-          if (!empty($username)) {
-            if(self::custormerUsernameExist($username) == true){
-              $formData["username"] = $username;
-            }else{
-              $messageBox["username"] = "Username does not exist";         
-            }
-
-          }else{
-              $messageBox["username"] = "Please enter username";
-          }
 
 
            //  check for email
           if (!empty($email)) {
-            if(self::custormerEmailExist($email) == true){
-              $formData["email"] = $email;
-            }else{
-              $messageBox["email"] = "email does not exist";
-            }
+              $formData["email"] = $email;  
           } else {
               $messageBox["email"] = "Please enter email";
           }
@@ -157,33 +153,27 @@
           
             //  check for password
           if (!empty($password)) {
-              if(self::custormerPassword($password) == true){
                 $formData["password"] = $password;
-              }else{
-                $messageBox["password"] = "password does not exist";
-
-              }
           }else{
             $messageBox["password"] = "Please enter password";
           }
 
 
           if(empty($messageBox)){
-              $result =  self::custormerEmailExist($email) ;
-              $result1 = self::custormerUsernameExist($username);
-              $result2 = self::custormerPassword($password);
-              if($result && $result1 && $result2){
+            extract($formData);
+            $password = sha1($password);
+            $sql = "SELECT *  FROM ".self::$tableName." WHERE `email`='$email' AND `password`='$password'";
+            $result = self::$Db->query($sql);
+            if($result->num_rows > 0){
+              self::setCustomerSession($result->fetch_assoc());
                 $messageBox["status"] = "success";
                 $messageBox["message"] = "Login Successfull";
                 return $messageBox;
-
-              }else{
+            }else{
                 $messageBox["status"] = "error";
                 $messageBox["message"] = "Invalid login ";
                 return $messageBox;
               }
-              
-
           }else{
               $messageBox["status"] = "error";
               return $messageBox;

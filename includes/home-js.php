@@ -1,5 +1,7 @@
 <!-- JAVASCRIPT FILES ========================================= -->
 <script src="<?=JAVASCRIPT_PATH?>home/jquery.min.js"></script><!-- JQUERY.MIN JS -->
+<script src="<?=JAVASCRIPT_PATH?>customer.js"></script><!-- JQUERY.MIN JS -->
+
 <script src="<?=PLUGIN_PATH?>wow/wow.js"></script><!-- WOW JS -->
 <script src="<?=PLUGIN_PATH?>bootstrap/js/popper.min.js"></script><!-- BOOTSTRAP.MIN JS -->
 <script src="<?=PLUGIN_PATH?>bootstrap/js/bootstrap.min.js"></script><!-- BOOTSTRAP.MIN JS -->

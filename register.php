@@ -3,11 +3,20 @@
  require_once "functions/Customer.php";
  require_once "config/Db.php";
  require_once "functions/Admin.php";
+ require_once "functions/Category.php";
+
+
+ if(!empty($_SESSION['customer_id'])){
+	$path = APP_PATH;
+	header("Location: $path");
+	exit();
+}
 
  $instance = Database::getDbInstance();
  Customer::setDb($instance);
 
-
+ Category::setDb($instance);
+ $allCategories = Category::getAllCategory();
  if(!empty($_POST["register"])){
     $result = Customer::register($_POST);
    } 
@@ -68,7 +77,7 @@
                             
                         
 
-                        <input class="btn-dark w-20 ml-auto mr-auto mt-4 form-control" style="font-size: 100%;" name="register" type="submit" value="Log in">
+                        <input class="btn-dark w-20 ml-auto mr-auto mt-4 form-control" style="font-size: 100%;" name="register" type="submit" value="Register">
 
                         <p style="font-size: small;" class="font-weight-light mt-2">Alreathy Registered?  <a class="btn-link" href="login.php">Login</a></p>
                     

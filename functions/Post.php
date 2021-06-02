@@ -1,6 +1,6 @@
 <?php
 
-class Post
+class Post 
 {
     private static $Db = null;
     private static $tableName = "posts";
